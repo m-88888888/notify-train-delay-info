@@ -3,7 +3,6 @@ require 'slack-notifier'
 require 'open-uri'
 # require 'pry-byebug'
 require 'simple_twitter'
-require 'json'
 
 class NotifyAboutTrainDelayInfo
   def execute
@@ -55,7 +54,9 @@ class NotifyAboutTrainDelayInfo
   end
 end
 
-def handler(event:, context:)
+begin
   NotifyAboutTrainDelayInfo.new.execute
-  { event: JSON.generate(event), context: JSON.generate(context.inspect) }
+  p 'task done.'
+rescue StandardError => e
+  pp e
 end
