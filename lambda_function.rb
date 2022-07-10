@@ -3,6 +3,8 @@ require 'slack-notifier'
 require 'open-uri'
 # require 'pry-byebug'
 require 'simple_twitter'
+require 'clockwork'
+include Clockwork
 
 class NotifyAboutTrainDelayInfo
   def execute
@@ -54,7 +56,15 @@ class NotifyAboutTrainDelayInfo
   end
 end
 
-begin
+every(1.day, 'notify_train', at: '08:30') do
+  NotifyAboutTrainDelayInfo.new.execute
+  p 'task done.'
+rescue StandardError => e
+  pp e
+end
+
+
+every(1.minutes, 'notify_train_test') do
   NotifyAboutTrainDelayInfo.new.execute
   p 'task done.'
 rescue StandardError => e
